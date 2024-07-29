@@ -21,5 +21,10 @@ namespace board
             this.color = color;
             this.moveCount = 0;
         }
+
+        public void incrementMoveCount()
+        {
+            moveCount++;
+        }
     }   
 }
