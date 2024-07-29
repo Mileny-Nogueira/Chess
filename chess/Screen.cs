@@ -4,7 +4,7 @@ namespace chess
 {
     internal class Screen
     {
-        public static void printBoard (Board board)
+        public static void printBoard(Board board)
         {
             for (int i = 0; i < board.rows; i ++)
             {

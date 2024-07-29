@@ -14,7 +14,7 @@ namespace board
         public int moveCount { get; protected set; }
         
 
-        public Piece (Board board, Color color)
+        public Piece(Board board, Color color)
         {
             this.position = null;
             this.board = board;
