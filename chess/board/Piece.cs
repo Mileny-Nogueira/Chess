@@ -9,15 +9,16 @@ namespace board
     internal class Piece
     {
         public Position position { get; set; }
+        public Board board { get; protected set; }
         public Color color { get; protected set; }
         public int moveCount { get; protected set; }
-        public Board board { get; protected set; }
+        
 
-        public Piece (Position position, Color color, Board board)
+        public Piece (Board board, Color color)
         {
-            this.position = position;
-            this.color = color;
+            this.position = null;
             this.board = board;
+            this.color = color;
             this.moveCount = 0;
         }
     }   
