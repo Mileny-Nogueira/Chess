@@ -1,5 +1,5 @@
-﻿using board;
-using chess;
+﻿
+using board;
 
 namespace chess
 {
@@ -12,13 +12,33 @@ namespace chess
                 ChessGame game = new ChessGame();
                 while (!game.finished)
                 {
-                    Console.Clear();
-                    Screen.printBoard(game.board);
-                    Console.Write("\nOrigin: ");
-                    Position origin = Screen.readChessPosition().toPosition();
-                    Console.Write("Target: ");
-                    Position target = Screen.readChessPosition().toPosition();
-                    game.executeMove(origin, target);
+                    try
+                    {
+                        Console.Clear();
+                        Screen.printBoard(game.board);
+                        Console.WriteLine("\nTurn: " + game.turn);
+                        Console.WriteLine("Waiting for player: " + game.currentPlayer);
+                        Console.Write("\nOrigin: ");
+                        Position origin = Screen.readChessPosition().toPosition();
+                        game.validateOriginPosition(origin);
+
+                        bool[,] possibleMoves = game.board.piece(origin).possibleMoves();
+
+                        Console.Clear();
+                        Screen.printBoard(game.board, possibleMoves);
+
+                        Console.WriteLine();
+                        Console.Write("Target: ");
+                        Position target = Screen.readChessPosition().toPosition();
+                        game.validateTargetPosition(origin, target);
+                        game.makeMove(origin, target);
+                    }
+                    catch (BoardException e)
+                    {
+                        Console.Write(e.Message);
+                        System.Threading.Thread.Sleep(2000);
+                    }
+                    
                 }
                 
             }

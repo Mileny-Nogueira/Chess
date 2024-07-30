@@ -29,7 +29,7 @@ namespace board
             return pieces[pos.row, pos.column];
         }
 
-        public bool doesPiceExistAtPosition(Position pos)
+        public bool doesPieceExistAtPosition(Position pos)
         {
             validatePosition(pos);
             return piece(pos) != null;
@@ -37,7 +37,7 @@ namespace board
 
         public void putPiece(Piece p, Position pos)
         {
-            if (doesPiceExistAtPosition(pos))
+            if (doesPieceExistAtPosition(pos))
             {
                 throw new BoardException("There is already a piece in this position!");
             }

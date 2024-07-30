@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace board
 {
-    internal class Piece
+    abstract internal class Piece
     {
         public Position position { get; set; }
         public Board board { get; protected set; }
@@ -22,9 +22,32 @@ namespace board
             this.moveCount = 0;
         }
 
-        public void incrementMoveCount()
+        public void incrementMoveCounter()
         {
             moveCount++;
         }
+
+        public bool existsPossibleMoves()
+        {
+            bool[,] mat = possibleMoves();
+            for (int i = 0; i < board.rows; i++)
+            {
+                for (int j = 0; j < board.columns; j++)
+                {
+                    if (mat[i, j])
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool canMoveTo(Position position)
+        {
+            return possibleMoves()[position.row, position.column];
+        }
+
+        public abstract bool[,] possibleMoves();
     }   
 }
