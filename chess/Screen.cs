@@ -10,11 +10,19 @@ namespace chess
         {
             printBoard(game.board);
             printCapturedPieces(game);
-            Console.WriteLine("\nTurn: " + game.turn);
-            Console.WriteLine("Waiting for player: " + game.currentPlayer);
-            if (game.check)
+            Console.WriteLine("Turn: " + game.turn);
+            if (!game.finished)
             {
-                Console.WriteLine("CHECK!");
+                Console.WriteLine("Waiting for player: " + game.currentPlayer);
+                if (game.check)
+                {
+                    Console.WriteLine("CHECK!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nCHECKMATE!");
+                Console.WriteLine("WINNER: " + game.currentPlayer);
             }
         }
 

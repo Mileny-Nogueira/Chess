@@ -37,9 +37,9 @@ namespace chess
                         Console.Write(e.Message);
                         System.Threading.Thread.Sleep(2000);
                     }
-                    
                 }
-                
+                Console.Clear();
+                Screen.printChessGame(game);
             }
             catch (BoardException e)
             { 
