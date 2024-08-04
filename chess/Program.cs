@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using board;
 
 namespace chess
@@ -7,6 +7,12 @@ namespace chess
     {
         static void Main(string[] args)
         {
+            Console.Title = "Chess Game";
+            Console.WindowWidth = 35;
+            Console.WindowHeight = 20;
+            Console.BufferWidth = 35;
+            Console.BufferHeight = 20;
+
             try
             {
                 ChessGame game = new ChessGame();
