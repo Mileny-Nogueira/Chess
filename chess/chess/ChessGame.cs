@@ -39,8 +39,25 @@ namespace chess
             {
                 captureds.Add(capturedPiece);
             }
+            //Castle Kingside
+            if (p is King && target.column == origin.column + 2)
+            {
+                Position originR = new Position(origin.row, origin.column + 3);
+                Position targetR = new Position(origin.row, origin.column + 1);
+                Piece R = board.deletePiece(originR);
+                R.incrementMoveCounter();
+                board.putPiece(R, targetR);
+            }
+            //Castle Queenside
+            if (p is King && target.column == origin.column - 2)
+            {
+                Position originR = new Position(origin.row, origin.column - 4);
+                Position targetR = new Position(origin.row, origin.column - 1);
+                Piece R = board.deletePiece(originR);
+                R.incrementMoveCounter();
+                board.putPiece(R, targetR);
+            }
             return capturedPiece;
-
         }
 
         public void unmakeMove(Position origin, Position target, Piece capturedPiece)
@@ -233,7 +250,7 @@ namespace chess
             putNewPiece('b', 1, new Knight(board, Color.White));
             putNewPiece('c', 1, new Bishop(board, Color.White));
             putNewPiece('d', 1, new Queen(board, Color.White));
-            putNewPiece('e', 1, new King(board, Color.White));
+            putNewPiece('e', 1, new King(board, Color.White, this));
             putNewPiece('f', 1, new Bishop(board, Color.White));
             putNewPiece('g', 1, new Knight(board, Color.White));
             putNewPiece('h', 1, new Rook(board, Color.White));
@@ -250,7 +267,7 @@ namespace chess
             putNewPiece('b', 8, new Knight(board, Color.Yellow));
             putNewPiece('c', 8, new Bishop(board, Color.Yellow));
             putNewPiece('d', 8, new Queen(board, Color.Yellow));
-            putNewPiece('e', 8, new King(board, Color.Yellow));
+            putNewPiece('e', 8, new King(board, Color.Yellow, this));
             putNewPiece('f', 8, new Bishop(board, Color.Yellow));
             putNewPiece('g', 8, new Knight(board, Color.Yellow));
             putNewPiece('h', 8, new Rook(board, Color.Yellow));
