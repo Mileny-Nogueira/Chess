@@ -16,6 +16,7 @@ namespace chess
         private HashSet<Piece> pieces;
         private HashSet<Piece> captureds;
         public  bool check {  get; private set; }
+        public Piece vulnerablePieceEnPassant { get; private set; }
 
         public ChessGame()
         {
@@ -24,9 +25,11 @@ namespace chess
             currentPlayer = Color.White;
             pieces = new HashSet<Piece>();
             captureds = new HashSet<Piece>();
-            putPieces();
+            vulnerablePieceEnPassant = null;
             finished = false;
             check = false;
+            putPieces();
+
         }
 
         public Piece executeMove(Position origin, Position target)
@@ -57,6 +60,24 @@ namespace chess
                 R.incrementMoveCounter();
                 board.putPiece(R, targetR);
             }
+            //En passant
+            if(p is Pawn)
+            {
+                if(origin.column != target.column && capturedPiece == null)
+                {
+                    Position posP;
+                    if(p.color == Color.White)
+                    {
+                        posP = new Position(target.row + 1, target.column);
+                    }
+                    else
+                    {
+                        posP = new Position(target.row - 1, target.column);
+                    }
+                    capturedPiece = board.deletePiece(posP);
+                    captureds.Add(capturedPiece);
+                }
+            }
             return capturedPiece;
         }
 
@@ -70,6 +91,43 @@ namespace chess
                 captureds.Remove(capturedPiece);
             }
             board.putPiece(p, origin);
+
+            //Castle Kingside
+            if (p is King && target.column == origin.column + 2)
+            {
+                Position originR = new Position(origin.row, origin.column + 3);
+                Position targetR = new Position(origin.row, origin.column + 1);
+                Piece R = board.deletePiece(targetR);
+                R.decrementMoveCounter();
+                board.putPiece(R, originR);
+            }
+            //Castle Queenside
+            if (p is King && target.column == origin.column - 2)
+            {
+                Position originR = new Position(origin.row, origin.column - 4);
+                Position targetR = new Position(origin.row, origin.column - 1);
+                Piece R = board.deletePiece(targetR);
+                R.decrementMoveCounter();
+                board.putPiece(R, originR);
+            }
+            //En passant
+            if (p is Pawn)
+            {
+                if (origin.column != target.column && capturedPiece == vulnerablePieceEnPassant)
+                {
+                    Piece pawn = board.deletePiece(target);
+                    Position posP;
+                    if (p.color == Color.White)
+                    {
+                        posP = new Position(3, target.column);
+                    }
+                    else
+                    {
+                        posP = new Position(4, target.column);
+                    }
+                    board.putPiece(pawn, posP);
+                }
+            }
         }
 
         public void makeMove(Position origin, Position target)
@@ -82,7 +140,23 @@ namespace chess
                 throw new BoardException("You can't put you in check!");
             }
 
-            if(isInCheck(adversary(currentPlayer)))
+            Piece p = board.piece(target);
+
+            //Promotion
+            if(p is Pawn)
+            {
+                if((p.color == Color.White && target.row == 0) || (p.color == Color.Yellow && target.row == 7))
+                {
+                    p = board.deletePiece(target);
+                    pieces.Remove(p);
+                    Piece queen = new Queen(board, p.color);
+                    board.putPiece(queen, target);
+                    pieces.Add(queen);
+                }
+            }
+
+
+            if (isInCheck(adversary(currentPlayer)))
             {
                 check = true;
             }
@@ -99,6 +173,16 @@ namespace chess
             {
                 turn++;
                 changePlayer();
+            }
+            
+            //En passant
+            if (p is Pawn && (target.row == origin.row - 2 || target.row == origin.row + 2))
+            {
+                vulnerablePieceEnPassant = p;
+            }
+            else
+            {
+                vulnerablePieceEnPassant = null;
             }
         }
 
